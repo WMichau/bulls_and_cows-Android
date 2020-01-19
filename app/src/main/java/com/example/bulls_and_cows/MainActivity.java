@@ -3,7 +3,10 @@ package com.example.bulls_and_cows;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout layout;
 
     int first_number, second_number, third_number, fourth_number;
-    int g_1, g_2,g_3,g_4;
+    int g_1, g_2, g_3, g_4;
     int bulls = 0, cows = 0, tr = 0;
     String result = "";
 
@@ -35,10 +38,42 @@ public class MainActivity extends AppCompatActivity {
         number3 = (EditText) findViewById(R.id.number3);
         number4 = (EditText) findViewById(R.id.number4);
 
-        number1.setFilters(new InputFilter[]{ new MinMaxFilter("1", "9")});
-        number2.setFilters(new InputFilter[]{ new MinMaxFilter("1", "9")});
-        number3.setFilters(new InputFilter[]{ new MinMaxFilter("1", "9")});
-        number4.setFilters(new InputFilter[]{ new MinMaxFilter("1", "9")});
+        number1.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                number1.getText().clear();
+                return false;
+            }
+        });
+
+        number2.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                number2.getText().clear();
+                return false;
+            }
+        });
+
+        number3.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                number3.getText().clear();
+                return false;
+            }
+        });
+
+        number4.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                number4.getText().clear();
+                return false;
+            }
+        });
+        
+        number1.setFilters(new InputFilter[]{new MinMaxFilter("1", "9")});
+        number2.setFilters(new InputFilter[]{new MinMaxFilter("1", "9")});
+        number3.setFilters(new InputFilter[]{new MinMaxFilter("1", "9")});
+        number4.setFilters(new InputFilter[]{new MinMaxFilter("1", "9")});
 
         b_check = (Button) findViewById(R.id.b_check);
         b_reset = (Button) findViewById(R.id.b_reset);
@@ -50,9 +85,37 @@ public class MainActivity extends AppCompatActivity {
 
         random = new Random();
 
+        number1.requestFocus();
+
         asked_number();
 
+
+        //auto focus change
+
+        /*number1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(number1.getText().toString().trim().length() == 1)
+                {
+                    number2.requestFocus();
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        }); */
+
     }
+
 
     public void b_check(View view) {
 
@@ -65,10 +128,9 @@ public class MainActivity extends AppCompatActivity {
             text_info.setText("Podaj wszystkie liczby");
         }*/
 
-        if((number1.getText().toString().equals("")) || number2.getText().toString().equals("") || number3.getText().toString().equals("") || number4.getText().toString().equals("")){
+        if ((number1.getText().toString().equals("")) || number2.getText().toString().equals("") || number3.getText().toString().equals("") || number4.getText().toString().equals("")) {
             text_info.setText("Podaj wszystkie liczby");
-        }
-        else {
+        } else {
             g_1 = Integer.parseInt(number1.getText().toString());
             g_2 = Integer.parseInt(number2.getText().toString());
             g_3 = Integer.parseInt(number3.getText().toString());
@@ -76,8 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (g_1 == g_2 || g_1 == g_3 || g_1 == g_4 || g_2 == g_3 || g_2 == g_4 || g_3 == g_4 || g_1 == 0) {
                 text_info.setText("Liczby nie moga sie powtarzac");
-            }
-            else {
+            } else {
                 text_info.setText("");
                 tr++;
                 check();
@@ -88,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void b_reset(View view){
+    public void b_reset(View view) {
         layout.removeAllViews();
         result = "";
         text_result.setText("");
@@ -105,55 +166,56 @@ public class MainActivity extends AppCompatActivity {
 
         first_number = random.nextInt(9) + 1;
 
-        do{
+        do {
             second_number = random.nextInt(9) + 1;
-        }while (first_number == second_number);
+        } while (first_number == second_number);
 
-        do{
+        do {
             third_number = random.nextInt(9) + 1;
-        }while (first_number == third_number || second_number == third_number);
+        } while (first_number == third_number || second_number == third_number);
 
-        do{
+        do {
             fourth_number = random.nextInt(9) + 1;
-        }while (fourth_number == first_number || fourth_number == second_number || third_number == fourth_number );
+        } while (fourth_number == first_number || fourth_number == second_number || third_number == fourth_number);
 
     }
 
-    private void check(){
+    private void check() {
 
-        if(g_1 == first_number){
+        if (g_1 == first_number) {
             bulls++;
         }
-        if(g_2 == second_number){
+        if (g_2 == second_number) {
             bulls++;
         }
-        if(g_3 == third_number){
+        if (g_3 == third_number) {
             bulls++;
         }
-        if(g_4 == fourth_number){
+        if (g_4 == fourth_number) {
             bulls++;
-        }
-
-        if(g_1 == second_number || g_1 == third_number || g_1 == fourth_number ){
-            cows++;
-        }
-        if(g_2 == first_number || g_2 == third_number || g_2 == fourth_number ){
-            cows++;
-        }
-        if(g_3 == second_number || g_3 == first_number || g_3 == fourth_number ){
-            cows++;
-        }
-        if(g_4 == second_number || g_4 == third_number || g_4 == first_number ){
-            cows++;
         }
 
-        result = result + ""  + tr + ". " + g_1 + "" + g_2 + "" + g_3 + "" + g_4 + " Bulls: " + bulls + " Cows: " + cows + "\n";
+        if (g_1 == second_number || g_1 == third_number || g_1 == fourth_number) {
+            cows++;
+        }
+        if (g_2 == first_number || g_2 == third_number || g_2 == fourth_number) {
+            cows++;
+        }
+        if (g_3 == second_number || g_3 == first_number || g_3 == fourth_number) {
+            cows++;
+        }
+        if (g_4 == second_number || g_4 == third_number || g_4 == first_number) {
+            cows++;
+        }
+
+        result = result + "" + tr + ". " + g_1 + "" + g_2 + "" + g_3 + "" + g_4 + " Bulls: " + bulls + " Cows: " + cows + "\n";
         text_result.setText(result);
     }
 
-    private void wincheck(){
-        if(bulls == 4){
-            text_info.setText("Wygrales. " + tr + " prób" );
+    private void wincheck() {
+        if (bulls == 4) {
+            text_info.setText("Wygrales. " + tr + " prób");
         }
     }
+
 }
